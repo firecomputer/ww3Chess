@@ -15,6 +15,7 @@ class Dragger:
         self.turn = turn
         self.ableArmy = self.turn.ableArmy
         self.armies = []
+        self.game = 0
     def updateMouse(self,pos):
         self.mousex = pos[0]
         self.mousey = pos[1]
@@ -68,6 +69,9 @@ class Dragger:
             self.defence_tile = self.tiles[tileCalc((self.afterCol,self.afterRow))]
             if(self.defence_tile.army != 0):
                 self.defence_army = self.defence_tile.army
+                if(self.defence_army.name == 'base'):
+                    self.game.isEnd = True
+                    return
                 attack_wining = self.turn.battle(self.tiles,self.selectedArmy,self.defence_army,self.turn.turn,self.defence_army.type,self.armies,self.defence_tile)
                 if(attack_wining):
                     retreatTile = self.turn.ableRetreat(self.armies,self.defence_army)

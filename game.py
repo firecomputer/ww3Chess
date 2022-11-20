@@ -19,6 +19,8 @@ class Game:
         self.turn.initArmies(self.board.armies)
         self.turn.findAbleArmy()
         self.dragger = Dragger(self.turn)
+        self.dragger.game = self
+        self.isEnd = False
 
     def mainloop(self):
         self.screen.fill((255,255,255))
@@ -28,6 +30,8 @@ class Game:
         self.dragger.showMoveAble(pygame,self.screen)
         self.board.showArmies()
         self.drawLine(color=(0,0,0),line_width=3)
+        if(self.isEnd):
+            self.gameEnd(self.turn.turn)
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if(self.dragger.dragging == False):
@@ -80,3 +84,8 @@ class Game:
             spawn("sov",bomber,(i,3))
         spawn("ger",base,(10,13))
         spawn("sov",base,(10,2))
+    def gameEnd(self,Win):
+        font = pygame.font.SysFont("arial", 150,True,False)
+        text = font.render("{} Win!".format(Win), True, (255,255,255))
+        self.screen.blit(text, (100,300))
+        print("{} Win!".format(Win))
