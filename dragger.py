@@ -79,8 +79,8 @@ class Dragger:
                         self.tiles[tileCalc(retreatTile)].army = self.defence_army
                         self.defence_army.changePos(self.defence_army.pos,retreatTile)
                         self.selectedArmy.changePos((self.initialCol,self.initialRow),(self.afterCol,self.afterRow))
-                    self.tiles[tileCalc((self.initialCol,self.initialRow))].army = 0
-                    self.tiles[tileCalc((self.afterCol,self.afterRow))].army = self.selectedArmy
+                        self.tiles[tileCalc((self.initialCol,self.initialRow))].army = 0
+                        self.tiles[tileCalc((self.afterCol,self.afterRow))].army = self.selectedArmy
                     self.sideTiles = []
                     self.turn.deleteAble(self.selectedArmy)
                 else:

@@ -40,12 +40,16 @@ class Army:
         self.pos = pos
         self.rect = self.rect.move(np.subtract(self.tiles[tileCalc(self.pos)].startPos,self.tiles[tileCalc(formerPos)].startPos))
         self.tile = self.tiles[tileCalc(self.pos)]
+        self.trench = 0
     def showOrg(self,screen,pygame):
         Orgbar = (self.tile.endPos[0]-self.tile.startPos[0])*(self.initial_org-self.organization)/self.initial_org
-        pygame.draw.line(screen,(105, 255, 135),(self.tile.startPos[0],self.tile.endPos[1]-3),(self.tile.endPos[0]-Orgbar,self.tile.endPos[1]-3),4)
+        pygame.draw.line(screen,(0,143,105),(self.tile.startPos[0],self.tile.endPos[1]-3),(self.tile.endPos[0]-Orgbar,self.tile.endPos[1]-3),4)
     def showHP(self,screen,pygame):
         HPbar = (self.tile.endPos[0]-self.tile.startPos[0])*(1-self.hp)
-        pygame.draw.line(screen,(255, 33, 229),(self.tile.startPos[0],self.tile.endPos[1]-6),(self.tile.endPos[0],self.tile.endPos[1]-6),4)
+        pygame.draw.line(screen,(128, 0, 0),(self.tile.startPos[0],self.tile.endPos[1]-6),(self.tile.endPos[0],self.tile.endPos[1]-6),3)
+    def showTrench(self,screen,pygame):
+        Trenchbar = (self.tile.endPos[1]-self.tile.startPos[1])*(1-self.trench)
+        pygame.draw.line(screen,(255,205,184),(self.tile.startPos[0]+3,self.tile.startPos[1]+Trenchbar),(self.tile.startPos[0]+3,self.tile.endPos[1]),4)
     def deleteThis(self):
         del(self.rect)
         del(self.icon)

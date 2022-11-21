@@ -21,6 +21,7 @@ class Game:
         self.dragger = Dragger(self.turn)
         self.dragger.game = self
         self.isEnd = False
+        self.turn.board = self.board
 
     def mainloop(self):
         self.screen.fill((255,255,255))

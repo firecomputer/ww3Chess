@@ -31,3 +31,4 @@ class Board(object):
             army._showArmy(self.screen)
             army.showOrg(self.screen,self.pygame)
             army.showHP(self.screen,self.pygame)
+            army.showTrench(self.screen,self.pygame)

@@ -8,6 +8,9 @@ class Turn():
         self.movedArmy = []
         self.armies = []
         self.tiles = []
+        self.board = 0
+    def setTiles(self):
+        self.board.tiles = self.tiles
     def initArmies(self, armies):
         self.armies = armies
     def findAbleArmy(self):
@@ -20,11 +23,12 @@ class Turn():
         if army in self.armies:
             army.trench = 0
             self.movedArmy.append(army)
-            self.ableArmy.remove(army)
+            if(army in self.ableArmy):
+                self.ableArmy.remove(army)
     def changeTrun(self):
         for army in self.armies:
             if army in self.movedArmy:
-                army.trench = 0
+                pass
             else:
                 army.reinforce_trench()
             army.reinforce_org()
@@ -32,6 +36,7 @@ class Turn():
             self.turn = "sov"
         elif(self.turn == "sov"):
             self.turn = "ger"
+            self.movedArmy = []
     def battle(self,tiles,one,two,attack,defence,armies,defence_tile):
         self.armies = armies
         self.tiles = tiles
@@ -79,11 +84,11 @@ class Turn():
             attackPower += attackPower * attack_bomber * 0.2
         elif(airSuperiority == defence):
             defencePower += defencePower * defence_bomber * 0.2
-        attackPower -= defence_tile.panelty * attackPower
+        attackPower += defence_tile.panelty * attackPower
         print(airSuperiority)
         hp_damage_factor = 0.15
         if(attackPower > defencePower):
-            two.trench = 0
+            two.trench -= 0.5
             two.organization -= attackPower
             one.organization -= defencePower
             if(one.organization < 0):
@@ -95,12 +100,13 @@ class Turn():
             if(one.hp < 0):
                 self.armies.remove(one)
                 self.tiles[tileCalc(one.pos)].army = 0
+                self.setTiles()
             if(two.hp < 0):
                 self.armies.remove(two)
                 self.tiles[tileCalc(two.pos)].army = 0
+                self.setTiles()
             return True
         elif(attackPower <= defencePower):
-            two.trench = 0
             two.organization -= attackPower
             one.organization -= defencePower
             if(one.organization < 0):
@@ -112,9 +118,11 @@ class Turn():
             if(one.hp < 0):
                 self.armies.remove(one)
                 self.tiles[tileCalc(one.pos)].army = 0
+                self.setTiles()
             if(two.hp < 0):
                 self.armies.remove(two)
                 self.tiles[tileCalc(two.pos)].army = 0
+                self.setTiles()
             return False
     def ableRetreat(self,armies,army):
         for i in range(-1,2):
@@ -124,6 +132,4 @@ class Turn():
                     if(tile.army == 0):
                         tile.army = army
                         return ((army.pos[0]+i,army.pos[1]+j))
-        armies.remove(army)
-        army.deleteThis()
         return 0
