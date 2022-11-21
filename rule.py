@@ -79,16 +79,15 @@ class Turn():
         print(defence_hp)
         attackPower += sqrt(attack_org)*attack_hp*0.5
         defencePower += sqrt(defence_org)*defence_hp*0.5
-        defencePower += defencePower * defence_trench * 0.4
+        defencePower += defencePower * defence_trench * trench_defence_factor
         if(airSuperiority == attack):
-            attackPower += attackPower * attack_bomber * 0.2
+            attackPower += attackPower * attack_bomber * airPower_factor
         elif(airSuperiority == defence):
-            defencePower += defencePower * defence_bomber * 0.2
-        attackPower += defence_tile.panelty * attackPower
+            defencePower += defencePower * defence_bomber * airPower_factor
+        defencePower -= defence_tile.panelty * defencePower
         print(airSuperiority)
-        hp_damage_factor = 0.15
         if(attackPower > defencePower):
-            two.trench -= 0.5
+            two.trench -= trench_damage_factor * two.trench
             two.organization -= attackPower
             one.organization -= defencePower
             if(one.organization < 0):

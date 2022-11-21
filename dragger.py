@@ -41,6 +41,10 @@ class Dragger:
                     pos = (self.initialCol+(i*t),self.initialRow+(i*j))
                     if(tileExist(pos)):
                         sideTile = tiles[tileCalc(pos)]
+                        if(t!= 0 and j!= 0):
+                            isdefended = self.checkDragDefenced(i*t,i*j,(self.initialCol,self.initialRow),sideTile,tiles)
+                            if(isdefended):
+                                break
                         if(sideTile.army == 0):
                             sideTiles.append(sideTile)
                             #print(pos)
@@ -59,6 +63,19 @@ class Dragger:
             color = ((self.color[0]+Tile.color[0])//2,(self.color[1]+Tile.color[1])//2,(self.color[2]+Tile.color[2])//2)
             pygame.draw.rect(screen,color,[Tile.startPos[0],Tile.startPos[1],SQSIZE,SPSIZE])
 
+    def checkDragDefenced(self,x,y,pos,tile,tiles):
+        leftPos = (pos[0]+x,pos[1])
+        rightPos = (pos[0],pos[1]+y)
+        if(tileExist(leftPos)==False or tileExist(rightPos)==False):
+            return False
+        leftTile = tiles[tileCalc(leftPos)]
+        upTile = tiles[tileCalc(rightPos)]
+        if(leftTile.army != 0 and upTile.army != 0):
+            print("army is blocking...")
+            if(leftTile.army.type != self.selectedArmy.type and upTile.army.type != self.selectedArmy.type):
+                print("we could not go drag cause enemy defence it")
+                return True
+        return False
     def DraggerTwiceGo(self,pos,armies):
         self.updateMouse(pos)
         self.armies = armies

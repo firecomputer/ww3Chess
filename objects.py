@@ -82,7 +82,7 @@ class armored(Army):
     def __init__(self,pos,type):
         self.link_ger = "src/armored_ger.png" 
         self.link_sov = "src/armored_sov.png"
-        super().__init__("armored",self.link_ger,self.link_sov,15,1,pos,type,2)
+        super().__init__("armored",self.link_ger,self.link_sov,8,1,pos,type,2)
 
 class fighter(Army):
     def __init__(self,pos,type):
