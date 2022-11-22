@@ -16,6 +16,7 @@ class Army:
         self.tiles = []
         self.tile = 0
         self.trench = 0
+        self.ace = 1
     def _showArmy(self,screen):
         screen.blit(self.icon,self.rect)
     def _iconInit(self,pygame,tiles):
@@ -33,9 +34,12 @@ class Army:
     def reinforce_trench(self):
         if(self.trench < 1):
             self.trench += 0.2
-    def reinforce_org(self):
+    def reinforce_org(self,ger_factor,sov_factor):
         if(self.organization < self.initial_org):
-            self.organization += self.hp
+            if(self.type == "ger"):
+                self.organization += self.hp*GER_org_up_factor+ger_factor
+            elif(self.type == "sov"):
+                self.organization += self.hp*SOV_org_up_factor+sov_factor
     def changePos(self,formerPos, pos):
         self.pos = pos
         self.rect = self.rect.move(np.subtract(self.tiles[tileCalc(self.pos)].startPos,self.tiles[tileCalc(formerPos)].startPos))

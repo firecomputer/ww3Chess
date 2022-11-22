@@ -48,7 +48,7 @@ class Game:
                 quit()
             if(event.type == pygame.KEYDOWN):
                 if(event.key == pygame.K_t):
-                    self.turn.changeTrun()
+                    self.turn.changeTrun(self.dragger.ger_factor,self.dragger.sov_factor)
                     self.turn.findAbleArmy()
                     self.dragger.turn = self.turn
                     self.dragger.ableArmy = self.turn.ableArmy

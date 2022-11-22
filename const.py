@@ -9,9 +9,13 @@ SPSIZE = HEIGHT / ROWS
 SEA_LAND = 0
 
 hp_damage_factor = 0.5
-trench_defence_factor = 0.4
-airPower_factor = 0.2
-trench_damage_factor = 0.5
+trench_defence_factor = 0.25
+airPower_factor = 0.3
+trench_damage_factor = 0.3
+GER_org_up_factor = 0.5
+SOV_org_up_factor = 0.5
+ace_factor = 0.2
+ace_loss_factor = 2
 
 def tileCalc(pos):
     totalPos = ((pos[1])*COLS)+pos[0]

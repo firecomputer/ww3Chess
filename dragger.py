@@ -16,6 +16,8 @@ class Dragger:
         self.ableArmy = self.turn.ableArmy
         self.armies = []
         self.game = 0
+        self.sov_factor=0
+        self.ger_factor=0
     def updateMouse(self,pos):
         self.mousex = pos[0]
         self.mousey = pos[1]
@@ -42,7 +44,7 @@ class Dragger:
                     if(tileExist(pos)):
                         sideTile = tiles[tileCalc(pos)]
                         if(t!= 0 and j!= 0):
-                            isdefended = self.checkDragDefenced(i*t,i*j,(self.initialCol,self.initialRow),sideTile,tiles)
+                            isdefended = self.checkDragDefenced(t,j,(self.initialCol+((i-1)*t),self.initialRow+((i-1)*j)),sideTile,tiles)
                             if(isdefended):
                                 break
                         if(sideTile.army == 0):
@@ -100,6 +102,12 @@ class Dragger:
                         self.tiles[tileCalc((self.afterCol,self.afterRow))].army = self.selectedArmy
                     self.sideTiles = []
                     self.turn.deleteAble(self.selectedArmy)
+                    if(self.selectedArmy.type == "ger"):
+                        self.ger_factor += 0.1
+                        self.sov_factor -= 0.1
+                    else:
+                        self.ger_factor -= 0.1
+                        self.sov_factor += 0.1
                 else:
                     self.turn.deleteAble(self.selectedArmy)
                     self.sideTiles = []
