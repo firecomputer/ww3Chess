@@ -60,7 +60,7 @@ class Dragger:
                                 pass
         self.sideTiles = sideTiles
     def showMoveAble(self,pygame,screen):
-        self.color = (50, 50, 255)
+        self.color = (10, 10, 255)
         for Tile in self.sideTiles:
             color = ((self.color[0]+Tile.color[0])//2,(self.color[1]+Tile.color[1])//2,(self.color[2]+Tile.color[2])//2)
             pygame.draw.rect(screen,color,[Tile.startPos[0],Tile.startPos[1],SQSIZE,SPSIZE])
@@ -103,11 +103,17 @@ class Dragger:
                     self.sideTiles = []
                     self.turn.deleteAble(self.selectedArmy)
                     if(self.selectedArmy.type == "ger"):
-                        self.ger_factor += 0.1
-                        self.sov_factor -= 0.1
+                        if(self.sov_factor > morale):
+                            self.ger_factor += morale
+                            self.sov_factor -= morale
+                        else:
+                            self.ger_factor += addi_morale
                     else:
-                        self.ger_factor -= 0.1
-                        self.sov_factor += 0.1
+                        if(self.ger_factor > morale):
+                            self.ger_factor -= morale
+                            self.sov_factor += morale
+                        else:
+                            self.sov_factor += addi_morale
                 else:
                     self.turn.deleteAble(self.selectedArmy)
                     self.sideTiles = []

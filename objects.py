@@ -3,7 +3,7 @@ from const import *
 import numpy as np
 
 class Army:
-    def __init__(self,name,ger_link,sov_link,organization,hp,pos,type,speed):
+    def __init__(self,name,ger_link,sov_link,organization,hp,pos,type,speed,attack):
         self.name = name
         self.ger_link = ger_link
         self.sov_link = sov_link
@@ -11,6 +11,7 @@ class Army:
         self.initial_org = organization
         self.hp = hp
         self.pos = pos
+        self.attack = attack
         self.type = type
         self.speed = speed
         self.tiles = []
@@ -59,46 +60,52 @@ class Army:
         del(self.icon)
         del(self)
 
-class Ground(Enum):
-    flat = (1,0,0,(41, 255, 44))
-    hill = (1.5,0,-0.25,(10, 176, 7))
-    mountain = (2,0.3,-0.5,(84, 66, 41))
-    forest = (1.5,0,-0.15,(0, 125, 48))
-    jungle = (1.5,0.2,-0.3,(0, 156, 99))
-    marsh = (2,0.35,-0.4,(222, 173, 113))
-    desert = (1,0.15,0,(255, 238, 0))
-    city = (1.2,0,-0.3,(162, 171, 163))
-    sea = "sea"
+class Ground():
+    def __init__(self,pygame):
+        self.flat = (1,0,0,"src/flat.jpg")
+        self.hill = (1.5,0,-0.25,"src/hill.jpg")
+        self.mountain = (2,0.3,-0.5,"src/mountain.jpg")
+        self.forest = (1.5,0,-0.15,"src/forest.jpg")
+        self.jungle = (1.5,0.2,-0.3,"src/jungle.jpg")
+        self.marsh = (2,0.35,-0.4,"src/marsh.jpg")
+        self.desert = (1,0.15,0,"src/sand.jpg")
+        self.city = (1.2,0,-0.3,"src/city.jpg")
+        self.sea = "src/sea.jpg"
+    def returnIcon(land):
+        if(land != "src/sea.jpg"):
+            return pygame.image.load(land[3])
+        else:
+            return pygame.image.load(land)
 
 class base(Army):
     def __init__(self,pos,type):
         self.link_ger = "src/ger_base.png"
         self.link_sov = "src/sov_base.png"
-        super().__init__("base",self.link_ger,self.link_sov,1,1,pos,type,0)
+        super().__init__("base",self.link_ger,self.link_sov,1,1,pos,type,0,1)
 
 class infantry(Army):
     def __init__(self,pos,type):
         self.link_ger = "src/infantry_ger.png"
         self.link_sov = "src/infantry_sov.png"
-        super().__init__("infantry",self.link_ger,self.link_sov,5,1,pos,type,1)
+        super().__init__("infantry",self.link_ger,self.link_sov,5,1,pos,type,1,1)
 
 class armored(Army):
     def __init__(self,pos,type):
         self.link_ger = "src/armored_ger.png" 
         self.link_sov = "src/armored_sov.png"
-        super().__init__("armored",self.link_ger,self.link_sov,8,1,pos,type,2)
+        super().__init__("armored",self.link_ger,self.link_sov,10,1,pos,type,2,2)
 
 class fighter(Army):
     def __init__(self,pos,type):
         self.link_ger = "src/ger_fighter.png"
         self.link_sov = "src/sov_fighter.png"
-        super().__init__("fighter",self.link_ger,self.link_sov,1,1,pos,type,7)
+        super().__init__("fighter",self.link_ger,self.link_sov,1,1,pos,type,7,3)
 
 class bomber(Army):
     def __init__(self,pos,type):
         self.link_ger = "src/ger_bomber.png" 
         self.link_sov = "src/sov_bomber.png"
-        super().__init__("bomber",self.link_ger,self.link_sov,1,1,pos,type,5)
+        super().__init__("bomber",self.link_ger,self.link_sov,1,1,pos,type,5,1)
 
 class destroyer(Army):
     def __init__(self):

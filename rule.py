@@ -78,27 +78,33 @@ class Turn():
         print(defence_org)
         print(defence_hp)
         if(attack_org > 0):
-            attackPower += sqrt(attack_org)*attack_hp*0.5
-        attackPower += ace_factor*one.ace
-        defencePower += ace_factor*two.ace
+            attackPower += sqrt(attack_org)*attack_hp*soft_attack_factor*one.attack
+        attackPower1 = ace_factor*one.ace*attackPower
         if(defence_org > 0):
-            defencePower += sqrt(defence_org)*defence_hp*0.5
-        defencePower += defencePower * defence_trench * trench_defence_factor
+            defencePower += sqrt(defence_org)*defence_hp*soft_attack_factor*two.attack
+        defencePower1 = ace_factor*two.ace*defencePower
+        defencePower2 = defencePower * defence_trench * trench_defence_factor
+        attackPower2 = -defencePower * defence_trench * trench_defence_factor
+        attackPower3 = 0
+        defencePower3 = 0
         if(airSuperiority == attack):
-            attackPower += attackPower * attack_bomber * airPower_factor
+            attackPower3 = attackPower * attack_bomber * airPower_factor
         elif(airSuperiority == defence):
-            defencePower += defencePower * defence_bomber * airPower_factor
-        defencePower -= defence_tile.panelty * defencePower
-        print(airSuperiority)
+            defencePower3 = defencePower * defence_bomber * airPower_factor
+        defencePower4 = -defence_tile.panelty * defencePower
+        attackPower4 = defence_tile.panelty * defencePower
+        attackPower += attackPower1+attackPower3*attackPower2*attackPower4
+        defencePower += defencePower1+defencePower2+defencePower3+defencePower4
+        print("airSuperiority={}".format(airSuperiority))
         if(attackPower > defencePower):
             two.trench -= trench_damage_factor * two.trench
             two.organization -= attackPower*(ace_loss_factor/one.ace)
             one.organization -= defencePower*(ace_loss_factor/two.ace)
             if(one.organization < 0):
-                one.hp += one.organization*hp_damage_factor
+                one.hp += one.organization*hp_damage_factor*(ace_hp_factor/one.ace)
                 one.organization = 0
             if(two.organization < 0):
-                two.hp += two.organization*hp_damage_factor
+                two.hp += two.organization*hp_damage_factor*(ace_hp_factor/two.ace)
                 two.organization = 0
             if(one.hp < 0):
                 if one in self.armies:
@@ -110,8 +116,10 @@ class Turn():
                     self.armies.remove(two)
                 self.tiles[tileCalc(two.pos)].army = 0
                 self.setTiles()
-                one.ace += 1
-                two.ace += 0.5
+                if(one.ace < max_ace):
+                    one.ace += 1
+                if(two.ace < max_ace):
+                    two.ace += 0.5
             return True
         elif(attackPower <= defencePower):
             two.organization -= attackPower*(ace_loss_factor/one.ace)
@@ -132,8 +140,10 @@ class Turn():
                     self.armies.remove(two)
                 self.tiles[tileCalc(two.pos)].army = 0
                 self.setTiles()
-            one.ace += 0.5
-            two.ace += 1
+                if(one.ace < max_ace):
+                    one.ace += 0.5
+                if(two.ace < max_ace):
+                    two.ace += 1
             return False
     def ableRetreat(self,armies,army):
         for i in range(-1,2):
