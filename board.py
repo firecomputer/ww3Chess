@@ -13,14 +13,15 @@ class Board(object):
     def add_tile(self):
         for i in range(0,ROWS):
             for j in range(0, COLS):
+                ground = Ground()
                 if(j+1 < SEA_LAND):
-                    ground = Ground(self.pygame)
                     type = choice([ground.flat, ground.hill, ground.mountain, ground.forest, ground.jungle, ground.marsh, ground.desert, ground.city])
                 else:
                     type = ground.sea
+                icon = ground.returnIcon(type,self.pygame)
                 startPos = (j*SQSIZE,i*SPSIZE)
                 endPos = ((j+1)*SQSIZE,(i+1)*SPSIZE)
-                newtile = Tile(self.pygame,type,startPos,endPos,self.screen)
+                newtile = Tile(self.pygame,type,startPos,endPos,self.screen,icon)
                 self.tiles.append(newtile)
     def spawnArmy(self,type,target,pos):
         army = target(pos,type)

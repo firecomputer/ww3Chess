@@ -1,26 +1,28 @@
-WIDTH = 1093
+WIDTH = 700
 HEIGHT = 700
 
 ROWS = 16
-COLS = 25
+COLS = 16
 SQSIZE = WIDTH / COLS
 SPSIZE = HEIGHT / ROWS
 
 SEA_LAND = 17
 
-hp_damage_factor = 0.5
+hp_damage_factor = 0.12
 trench_defence_factor = 0.25
 airPower_factor = 0.3
-trench_damage_factor = 0.3
+trench_damage_factor = 0.6
 GER_org_up_factor = 0.5
 SOV_org_up_factor = 0.5
-ace_factor = 0.2
-ace_loss_factor = 2
+ace_factor = 0.1
+ace_loss_factor = 1
+ace_loss_decline_factor = 0.7
 ace_hp_factor = 1
+ace_hp_decline_factor = 0.7
 max_ace = 15
 soft_attack_factor = 0.5
-morale = 0.05
-addi_morale=0.01
+morale = 0.1
+addi_morale=0.05
 
 def tileCalc(pos):
     totalPos = ((pos[1])*COLS)+pos[0]

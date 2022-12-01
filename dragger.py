@@ -52,7 +52,9 @@ class Dragger:
                             #print(pos)
                         elif(sideTile.army.type != self.selectedArmy.type):
                             if(sideTile.army.name == "fighter" or sideTile.army.name == "bomber"):
-                                pass
+                                if(self.selectedArmy.name == "fighter" or self.selectedArmy.name == "bomber"):
+                                    sideTiles.append(sideTile)
+                                    break
                             elif(self.selectedArmy.name != "fighter" and self.selectedArmy.name != "bomber"):
                                 sideTiles.append(sideTile)
                                 break
@@ -60,10 +62,12 @@ class Dragger:
                                 pass
         self.sideTiles = sideTiles
     def showMoveAble(self,pygame,screen):
-        self.color = (10, 10, 255)
+        self.color = (0, 0, 255)
         for Tile in self.sideTiles:
-            color = ((self.color[0]+Tile.color[0])//2,(self.color[1]+Tile.color[1])//2,(self.color[2]+Tile.color[2])//2)
-            pygame.draw.rect(screen,color,[Tile.startPos[0],Tile.startPos[1],SQSIZE,SPSIZE])
+            s = pygame.Surface((SPSIZE,SQSIZE))  # the size of your rect
+            s.set_alpha(90)                # alpha level
+            s.fill(self.color)           # this fills the entire surface
+            screen.blit(s, Tile.startPos)    # (0,0) are the top-left coordinates
 
     def checkDragDefenced(self,x,y,pos,tile,tiles):
         leftPos = (pos[0]+x,pos[1])

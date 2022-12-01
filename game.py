@@ -15,7 +15,7 @@ class Game:
         info = pygame.display.Info()
         screensize = info.current_w,info.current_h
         print(screensize)
-        self.screen = pygame.display.set_mode((WIDTH,screensize[1]),pygame.SCALED) #화면 크기 설정
+        self.screen = pygame.display.set_mode((WIDTH,HEIGHT)) #화면 크기 설정
         self.clock = pygame.time.Clock()
         self.board = Board(pygame,self.screen)
         self.spawnAllArmy()
