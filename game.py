@@ -27,6 +27,17 @@ class Game:
         self.isEnd = False
         self.turn.board = self.board
 
+    def reset():
+        self.board = Board(pygame,self.screen)
+        self.spawnAllArmy()
+        self.turn = Turn()
+        self.turn.initArmies(self.board.armies)
+        self.turn.findAbleArmy()
+        self.dragger = Dragger(self.turn)
+        self.dragger.game = self
+        self.isEnd = False
+        self.turn.board = self.board
+
     def mainloop(self):
         self.screen.fill((255,255,255))
         for tile in self.board.tiles:

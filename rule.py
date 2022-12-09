@@ -1,6 +1,7 @@
 from const import *
 from math import *
 
+
 class Turn():
     def __init__(self):
         self.turn = "ger"

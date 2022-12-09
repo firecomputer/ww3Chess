@@ -1,5 +1,6 @@
 from const import *
 from rule import *
+import asyncio
 
 class Dragger:
     def __init__(self,turn):
@@ -18,6 +19,7 @@ class Dragger:
         self.game = 0
         self.sov_factor=0
         self.ger_factor=0
+        self.loop = asyncio.get_event_loop()
     def updateMouse(self,pos):
         self.mousex = pos[0]
         self.mousey = pos[1]
@@ -100,8 +102,8 @@ class Dragger:
                     retreatTile = self.turn.ableRetreat(self.armies,self.defence_army)
                     if(retreatTile != 0):
                         self.tiles[tileCalc(retreatTile)].army = self.defence_army
-                        self.defence_army.changePos(self.defence_army.pos,retreatTile)
-                        self.selectedArmy.changePos((self.initialCol,self.initialRow),(self.afterCol,self.afterRow))
+                        self.defence_army.changePos(self.defence_army.pos,retreatTile,0)
+                        self.selectedArmy.changePos((self.initialCol,self.initialRow),(self.afterCol,self.afterRow),0)
                         self.tiles[tileCalc((self.initialCol,self.initialRow))].army = 0
                         self.tiles[tileCalc((self.afterCol,self.afterRow))].army = self.selectedArmy
                     self.sideTiles = []
@@ -122,7 +124,7 @@ class Dragger:
                     self.turn.deleteAble(self.selectedArmy)
                     self.sideTiles = []
             else:
-                self.selectedArmy.changePos((self.initialCol,self.initialRow),(self.afterCol,self.afterRow))
+                self.selectedArmy.changePos((self.initialCol,self.initialRow),(self.afterCol,self.afterRow),0)
                 self.tiles[tileCalc((self.initialCol,self.initialRow))].army = 0
                 self.tiles[tileCalc((self.afterCol,self.afterRow))].army = self.selectedArmy
                 self.sideTiles = []

@@ -18,6 +18,7 @@ class Army:
         self.tile = 0
         self.trench = 0
         self.ace = 1
+        self.board = 0
     def _showArmy(self,screen):
         screen.blit(self.icon,self.rect)
     def _iconInit(self,pygame,tiles):
@@ -41,11 +42,21 @@ class Army:
                 self.organization += self.hp*GER_org_up_factor+ger_factor
             elif(self.type == "sov"):
                 self.organization += self.hp*SOV_org_up_factor+sov_factor
-    def changePos(self,formerPos, pos):
-        self.pos = pos
-        self.rect = self.rect.move(np.subtract(self.tiles[tileCalc(self.pos)].startPos,self.tiles[tileCalc(formerPos)].startPos))
-        self.tile = self.tiles[tileCalc(self.pos)]
-        self.trench = 0
+    def changePos(self,formerPos, pos,progress):
+        if(progress < 10):
+            self.pos = pos
+            distance = (np.subtract(self.tiles[tileCalc(self.pos)].startPos,self.tiles[tileCalc(formerPos)].startPos))
+            distance = (distance/10)
+            print(progress)
+            distance_batch = distance
+            self.rect.move_ip(distance_batch)
+            self.tile = self.tiles[tileCalc(self.pos)]
+            self.trench = 0
+            if(progress == 0):
+                self.board.movingArmies.append([self.changePos,formerPos, pos, progress+1])
+            if(progress >= 9):
+                self.rect.update((self.tiles[tileCalc(self.pos)].startPos),(SQSIZE,SPSIZE))
+        
     def showOrg(self,screen,pygame):
         Orgbar = (self.tile.endPos[0]-self.tile.startPos[0])*(self.initial_org-self.organization)/self.initial_org
         pygame.draw.line(screen,(0,143,105),(self.tile.startPos[0],self.tile.endPos[1]-3),(self.tile.endPos[0]-Orgbar,self.tile.endPos[1]-3),4)
