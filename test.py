@@ -148,18 +148,18 @@ def optimize_model():
     # for each batch state according to policy_net
     print(policy_net(state_batch).shape)
     print(action_batch.shape)
-    state_action_values = policy_net(state_batch)[:128,0,:].reshape(128,164).gather(1, action_batch.reshape(128,164))
+    state_action_values = policy_net(state_batch)[:128,0,:].reshape(128,82).gather(1, action_batch.reshape(128,82))
 
     # Compute V(s_{t+1}) for all next states.
     # Expected values of actions for non_final_next_states are computed based
     # on the "older" target_net; selecting their best reward with max(1)[0].
     # This is merged based on the mask, such that we'll have either the expected
     # state value or 0 in case the state was final.
-    next_state_values = torch.zeros(BATCH_SIZE, device=device).expand((164,128)).reshape(128,164)
+    next_state_values = torch.zeros(BATCH_SIZE, device=device).expand((82,128)).reshape(128,82)
     with torch.no_grad():
         next_state_values[non_final_mask] = target_net(non_final_next_states).max(1)[0]
     # Compute the expected Q values
-    expected_state_action_values = (next_state_values * GAMMA) + reward_batch.expand((82,128,2)).reshape(128,164)
+    expected_state_action_values = (next_state_values * GAMMA) + reward_batch.expand((41,128,2)).reshape(128,82)
 
     # Compute Huber loss
     criterion = nn.SmoothL1Loss()
@@ -176,47 +176,49 @@ if torch.cuda.is_available():
     num_episodes = 600
 else:
     num_episodes = 50
+    
+# Initialize the environment and get it's state
+state = torch.tensor(state, dtype=torch.float32, device=device).unsqueeze(0).reshape(1,2,329)
+t = 0
+while True:
+    action = select_action(state)
+    if(env.country == 0):
+        env.step(action[0][0])
+        continue
+    env.setDuraction(t+1)
+    observation, reward, done, info = env.step(action[0][0])
+    reward = torch.tensor([reward], device=device)
+    for id, ob in enumerate(observation):
+        for idx, stating in enumerate(ob):
+            if(stating == None):
+                observation[id][idx] = -1
+    print(state.shape)
+    next_state = torch.tensor(observation, dtype=torch.float32, device=device).unsqueeze(0)
 
-for i_episode in range(num_episodes):
-    # Initialize the environment and get it's state
-    state = torch.tensor(state, dtype=torch.float32, device=device).unsqueeze(0).reshape(1,2,329)
-    t = 0
-    while True:
-        action = select_action(state)
-        env.setDuraction(t+1)
-        observation, reward, done, info = env.step(action[0][0])
-        reward = torch.tensor([reward], device=device)
-        for id, ob in enumerate(observation):
-            for idx, stating in enumerate(ob):
-                if(stating == None):
-                    observation[id][idx] = -1
-        print(state.shape)
-        next_state = torch.tensor(observation, dtype=torch.float32, device=device).unsqueeze(0)
+    # Store the transition in memory
+    memory.push(state, action, next_state, reward)
 
-        # Store the transition in memory
-        memory.push(state, action, next_state, reward)
+    state = next_state
 
-        state = next_state
+    print(state.shape)
 
-        print(state.shape)
+    # Perform one step of the optimization (on the policy network)
+    optimize_model()
 
-        # Perform one step of the optimization (on the policy network)
-        optimize_model()
-
-        # Soft update of the target network's weights
-        # θ′ ← τ θ + (1 −τ )θ′
-        target_net_state_dict = target_net.state_dict()
-        policy_net_state_dict = policy_net.state_dict()
-        for key in policy_net_state_dict:
-            target_net_state_dict[key] = policy_net_state_dict[key]*TAU + target_net_state_dict[key]*(1-TAU)
-        target_net.load_state_dict(target_net_state_dict)
-        if done:
-            episode_durations.append(t + 1)
-            episode_x.append(i_episode)
-            plot_durations()
-            env.reset()
-            break
-        t += 1
+    # Soft update of the target network's weights
+    # θ′ ← τ θ + (1 −τ )θ′
+    target_net_state_dict = target_net.state_dict()
+    policy_net_state_dict = policy_net.state_dict()
+    for key in policy_net_state_dict:
+        target_net_state_dict[key] = policy_net_state_dict[key]*TAU + target_net_state_dict[key]*(1-TAU)
+    target_net.load_state_dict(target_net_state_dict)
+    if done:
+        episode_durations.append(t + 1)
+        episode_x.append(i_episode)
+        plot_durations()
+        env.reset()
+        break
+    t += 1
 with open("policy.pickle","wb") as fw:
     pickle.dump(policy_net, fw)
 with open("target.pickle","wb") as fw:
@@ -225,23 +227,3 @@ with open("target.pickle","wb") as fw:
 print('Complete')
 plt.ioff()
 plt.show()
-
-'''
-for episode in range(0,1):
-    for _ in range(10000):
-        action = env.action_space.sample()
-        observation, reward, done, info = env.step(action)
-        observation_ger = observation[0]
-        observation_sov = observation[1]
-        reward_ger = reward[0]
-        reward_sov = reward[1]
-        if done:
-            observation = env.reset()
-            observation_ger = observation[0]
-            observation_sov = observation[1]
-            break
-env.close()
-env.isplayable = 1
-with open("env.pickle","wb") as fw:
-    pickle.dump(env, fw)
-'''

@@ -32,7 +32,9 @@ class Dragger:
         self.selectedArmy = nowTile.army
         if self.selectedArmy not in self.ableArmy:
             return
-        if(self.selectedArmy == 0):
+
+        if(type(self.selectedArmy) == int):
+            print("that tile has no army")
             return
         self.dragging = True
         speed = self.selectedArmy.speed
@@ -85,10 +87,11 @@ class Dragger:
                 return True
         return False
     def DraggerTwiceGo(self,pos,armies):
-        self.updateMouse(pos)
+        self.tiles = self.game.board.tiles
         self.armies = armies
         self.afterCol = int(self.mousex // SQSIZE)
         self.afterRow = int(self.mousey // SPSIZE)
+        attackWin = -1
         if(self.posIsAble()):
             self.dragging = False
             self.defence_tile = self.tiles[tileCalc((self.afterCol,self.afterRow))]
@@ -96,7 +99,7 @@ class Dragger:
                 self.defence_army = self.defence_tile.army
                 if(self.defence_army.name == 'base'):
                     self.game.isEnd = True
-                    return
+                    return -2
                 attack_wining = self.turn.battle(self.tiles,self.selectedArmy,self.defence_army,self.turn.turn,self.defence_army.type,self.armies,self.defence_tile)
                 if(attack_wining):
                     retreatTile = self.turn.ableRetreat(self.armies,self.defence_army)
@@ -104,8 +107,8 @@ class Dragger:
                         self.tiles[tileCalc(retreatTile)].army = self.defence_army
                         self.defence_army.changePos(self.defence_army.pos,retreatTile,0)
                         self.selectedArmy.changePos((self.initialCol,self.initialRow),(self.afterCol,self.afterRow),0)
-                        self.tiles[tileCalc((self.initialCol,self.initialRow))].army = 0
-                        self.tiles[tileCalc((self.afterCol,self.afterRow))].army = self.selectedArmy
+                        self.game.board.tiles[tileCalc((self.initialCol,self.initialRow))].army = 0
+                        self.game.board.tiles[tileCalc((self.afterCol,self.afterRow))].army = self.selectedArmy
                     self.sideTiles = []
                     self.turn.deleteAble(self.selectedArmy)
                     if(self.selectedArmy.type == "ger"):
@@ -123,15 +126,21 @@ class Dragger:
                 else:
                     self.turn.deleteAble(self.selectedArmy)
                     self.sideTiles = []
+                if(attack_wining):
+                    return 1
+                else:
+                    return 0
             else:
                 self.selectedArmy.changePos((self.initialCol,self.initialRow),(self.afterCol,self.afterRow),0)
-                self.tiles[tileCalc((self.initialCol,self.initialRow))].army = 0
-                self.tiles[tileCalc((self.afterCol,self.afterRow))].army = self.selectedArmy
+                self.game.board.tiles[tileCalc((self.initialCol,self.initialRow))].army = 0
+                self.game.board.tiles[tileCalc((self.afterCol,self.afterRow))].army = self.selectedArmy
                 self.sideTiles = []
                 self.turn.deleteAble(self.selectedArmy)
+                return -1
         else:
             self.dragging = False
             self.sideTiles = []
+            return -1
     def posIsAble(self):
         if self.tiles[tileCalc((self.afterCol,self.afterRow))] in self.sideTiles:
             return True

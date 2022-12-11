@@ -26,8 +26,17 @@ class Game:
         self.dragger.game = self
         self.isEnd = False
         self.turn.board = self.board
+        self.fast = 0
 
-    def reset():
+    def reset(self):
+        pygame.display.quit()
+        pygame.quit()
+        pygame.init()
+        info = pygame.display.Info()
+        screensize = info.current_w,info.current_h
+        print(screensize)
+        self.screen = pygame.display.set_mode((WIDTH,HEIGHT)) #화면 크기 설정
+        self.clock = pygame.time.Clock()
         self.board = Board(pygame,self.screen)
         self.spawnAllArmy()
         self.turn = Turn()
@@ -46,6 +55,7 @@ class Game:
         self.dragger.showMoveAble(pygame,self.screen)
         self.board.showArmies()
         self.drawLine(color=(0,0,0),line_width=3)
+        self.confirmTile()
         if(self.isEnd):
             self.gameEnd(self.turn.turn)
         for event in pygame.event.get():
@@ -57,7 +67,10 @@ class Game:
                     self.dragger.updatePos(clicked_col,clicked_row)
                     self.dragger.calcAble(self.board.tiles)
                 else:
-                    self.dragger.DraggerTwiceGo(event.pos,self.board.armies)
+                    self.dragger.updateMouse(event.pos)
+                    clicked_col = int(self.dragger.mousex // SQSIZE)
+                    clicked_row = int(self.dragger.mousey // SPSIZE)
+                    self.dragger.DraggerTwiceGo((clicked_col,clicked_row),self.board.armies)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
@@ -67,6 +80,11 @@ class Game:
                     self.turn.findAbleArmy()
                     self.dragger.turn = self.turn
                     self.dragger.ableArmy = self.turn.ableArmy
+                if(event.key == pygame.K_a):
+                    if(self.fast > 0):
+                        self.fast -= 1
+                if(event.key == pygame.K_s):
+                    self.fast += 1
 
         pygame.display.update() #모든 화면 그리기 업데이트
         self.clock.tick(30) #30 FPS (초당 프레임 수) 를 위한 딜레이 추가, 딜레이 시간이 아닌 목표로 하는 FPS 값
@@ -100,8 +118,17 @@ class Game:
             spawn("sov",bomber,(i,3))
         spawn("ger",base,(10,13))
         spawn("sov",base,(10,2))
+
+    def confirmTile(self):
+        for tile in self.board.tiles:
+            if(tile.army != 0):
+                if(tile.army.pos != (tile.startPos[0]//SQSIZE,tile.startPos[1]//SQSIZE)):
+                    tile.army = 0
     def gameEnd(self,Win):
         font = pygame.font.SysFont("arial", 150,True,False)
-        text = font.render("{} Win!".format(Win), True, (255,255,255))
+        if(Win == "ger"):
+            text = font.render("{} Win!".format("KOR"), True, (0,0,255))
+        else:
+            text = font.render("{} Win!".format("CHI"), True, (255,0,0))
         self.screen.blit(text, (100,300))
         print("{} Win!".format(Win))

@@ -56,7 +56,9 @@ class Turn():
             for j in range(-3,4):
                 if(i == 0 and j == 0): continue
                 newPos = (defence_pos[0]+i,defence_pos[1]+j)
-                army = tiles[tileCalc(newPos)].army
+                army = 0
+                if(tileExist(newPos)):
+                    army = tiles[tileCalc(newPos)].army
                 if(army != 0):
                     if(army.name == "fighter"):
                         if(army.type == attack):
@@ -76,8 +78,6 @@ class Turn():
             airSuperiority = 0
         attackPower = 0
         defencePower = 0
-        print(defence_org)
-        print(defence_hp)
         if(attack_org > 0):
             attackPower += sqrt(attack_org)*attack_hp*soft_attack_factor*one.attack
         attackPower1 = ace_factor*one.ace*attackPower
@@ -116,12 +116,12 @@ class Turn():
             if(one.hp < 0):
                 if one in self.armies:
                     self.armies.remove(one)
-                self.tiles[tileCalc(one.pos)].army = 0
+                self.board.tiles[tileCalc(one.pos)].army = 0
                 self.setTiles()
             if(two.hp < 0):
                 if two in self.armies:
                     self.armies.remove(two)
-                self.tiles[tileCalc(two.pos)].army = 0
+                self.board.tiles[tileCalc(two.pos)].army = 0
                 self.setTiles()
             if(one.ace < max_ace):
                 one.ace += 1
@@ -140,12 +140,12 @@ class Turn():
             if(one.hp < 0):
                 if one in self.armies:
                     self.armies.remove(one)
-                self.tiles[tileCalc(one.pos)].army = 0
+                self.board.tiles[tileCalc(one.pos)].army = 0
                 self.setTiles()
             if(two.hp < 0):
                 if two in self.armies:
                     self.armies.remove(two)
-                self.tiles[tileCalc(two.pos)].army = 0
+                self.board.tiles[tileCalc(two.pos)].army = 0
                 self.setTiles()
             if(one.ace < max_ace):
                 one.ace += 0.1

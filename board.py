@@ -11,6 +11,7 @@ class Board(object):
         self.screen = screen
         self.pygame = pygame
         self.add_tile()
+        self.armyID = 0
     def add_tile(self):
         for i in range(0,ROWS):
             for j in range(0, COLS):
@@ -25,7 +26,8 @@ class Board(object):
                 newtile = Tile(self.pygame,type,startPos,endPos,self.screen,icon)
                 self.tiles.append(newtile)
     def spawnArmy(self,type,target,pos):
-        army = target(pos,type)
+        army = target(pos,type,self.armyID)
+        self.armyID += 1
         tile = army._iconInit(self.pygame,self.tiles)
         army.board = self
         tile.setArmy(army)
