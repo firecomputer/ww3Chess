@@ -84,6 +84,8 @@ class HOIEnv(gym.Env,gym.utils.EzPickle):
             state[i] = np.array(state[i]).reshape((lastNum+1)*4)
             state[i] = np.append(np.array(self.country),state[i])
             state[i] = list(state[i])
+            if(done == True):
+                break
             if((self.game.turn.turn == "ger" and self.country == 0) or (self.game.turn.turn == "sov" and self.country == 1)):
                 for idx,Pos in enumerate(newPos):
                     if(Pos[0] == None or Pos[1] == None):

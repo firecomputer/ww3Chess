@@ -1,6 +1,6 @@
 from const import *
 from math import *
-
+from random import *
 
 class Turn():
     def __init__(self):
@@ -153,8 +153,12 @@ class Turn():
                 two.ace += 1
             return False
     def ableRetreat(self,armies,army):
-        for i in range(-1,2):
-            for j in range(-1,2):
+        shuffle_a = [-1,0,1]
+        shuffle_b = [-1,0,1]
+        shuffle(shuffle_a)
+        shuffle(shuffle_b)
+        for i in shuffle_a:
+            for j in shuffle_b:
                 if(tileExist((army.pos[0]+i,army.pos[1]+j))):
                     tile = self.tiles[tileCalc((army.pos[0]+i,army.pos[1]+j))]
                     if(tile.army == 0):

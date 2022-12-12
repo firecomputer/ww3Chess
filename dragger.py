@@ -112,15 +112,15 @@ class Dragger:
                     self.sideTiles = []
                     self.turn.deleteAble(self.selectedArmy)
                     if(self.selectedArmy.type == "ger"):
-                        if(self.sov_factor > morale):
-                            self.ger_factor += morale
-                            self.sov_factor -= morale
+                        if(self.sov_factor > morale*GER_moral_factor):
+                            self.ger_factor += morale*GER_moral_factor
+                            self.sov_factor -= morale*GER_moral_factor
                         else:
                             self.ger_factor += addi_morale
                     else:
-                        if(self.ger_factor > morale):
-                            self.ger_factor -= morale
-                            self.sov_factor += morale
+                        if(self.ger_factor > morale*SOV_moral_factor):
+                            self.ger_factor -= morale*SOV_moral_factor
+                            self.sov_factor += morale*SOV_moral_factor
                         else:
                             self.sov_factor += addi_morale
                 else:
