@@ -64,7 +64,6 @@ class HOIEnv(gym.Env,gym.utils.EzPickle):
             idx = 0
             lastNum = -1
             for army in self.armies:
-
                 if(army.number != lastNum+1):
                     while(army.number > lastNum+1):
                         state[i].append([None,None,None,None])

@@ -50,7 +50,7 @@ class DQN(nn.Module):
         x = F.relu(self.layer2(x))
         return self.layer3(x)
 
-env = HOIEnv(1)
+env = HOIEnv(0)
 
 BATCH_SIZE = 128
 GAMMA = 0.99
@@ -202,9 +202,6 @@ while True:
 
     print(state.shape)
 
-    # Perform one step of the optimization (on the policy network)
-    optimize_model()
-
     # Soft update of the target network's weights
     # θ′ ← τ θ + (1 −τ )θ′
     target_net_state_dict = target_net.state_dict()
@@ -213,17 +210,7 @@ while True:
         target_net_state_dict[key] = policy_net_state_dict[key]*TAU + target_net_state_dict[key]*(1-TAU)
     target_net.load_state_dict(target_net_state_dict)
     if done:
-        episode_durations.append(t + 1)
-        episode_x.append(i_episode)
-        plot_durations()
-        env.reset()
         break
     t += 1
-with open("policy.pickle","wb") as fw:
-    pickle.dump(policy_net, fw)
-with open("target.pickle","wb") as fw:
-    pickle.dump(target_net, fw)
 
 print('Complete')
-plt.ioff()
-plt.show()
