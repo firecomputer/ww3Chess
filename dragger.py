@@ -37,7 +37,7 @@ class Dragger:
             print("that tile has no army")
             return
         self.dragging = True
-        speed = self.selectedArmy.speed
+        speed = int(self.selectedArmy.speed*self.selectedArmy.hp*self.selectedArmy.organization/self.selectedArmy.initial_org)
         sideTiles = []
         for t in range(-1,2):
             for j in range(-1,2):
@@ -131,11 +131,12 @@ class Dragger:
                 else:
                     return 0
             else:
-                self.selectedArmy.changePos((self.initialCol,self.initialRow),(self.afterCol,self.afterRow),0)
-                self.game.board.tiles[tileCalc((self.initialCol,self.initialRow))].army = 0
-                self.game.board.tiles[tileCalc((self.afterCol,self.afterRow))].army = self.selectedArmy
-                self.sideTiles = []
-                self.turn.deleteAble(self.selectedArmy)
+                if(type(self.selectedArmy) != int):
+                    self.selectedArmy.changePos((self.initialCol,self.initialRow),(self.afterCol,self.afterRow),0)
+                    self.game.board.tiles[tileCalc((self.initialCol,self.initialRow))].army = 0
+                    self.game.board.tiles[tileCalc((self.afterCol,self.afterRow))].army = self.selectedArmy
+                    self.sideTiles = []
+                    self.turn.deleteAble(self.selectedArmy)
                 return -1
         else:
             self.dragging = False

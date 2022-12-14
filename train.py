@@ -148,18 +148,19 @@ def optimize_model():
     # for each batch state according to policy_net
     print(policy_net(state_batch).shape)
     print(action_batch.shape)
-    state_action_values = policy_net(state_batch)[:128,0,:].reshape(128,164).gather(1, action_batch.reshape(128,164))
+    #action_batch = action_batch.reshape(128,82,3)[:,:,:2].reshape(128,164)
+    state_action_values = policy_net(state_batch)[:128,0,:].reshape(128,246).gather(1, action_batch.reshape(128,246))
 
     # Compute V(s_{t+1}) for all next states.
     # Expected values of actions for non_final_next_states are computed based
     # on the "older" target_net; selecting their best reward with max(1)[0].
     # This is merged based on the mask, such that we'll have either the expected
     # state value or 0 in case the state was final.
-    next_state_values = torch.zeros(BATCH_SIZE, device=device).expand((164,128)).reshape(128,164)
+    next_state_values = torch.zeros(BATCH_SIZE, device=device).expand((246,128)).reshape(128,246)
     with torch.no_grad():
         next_state_values[non_final_mask] = target_net(non_final_next_states).max(1)[0]
     # Compute the expected Q values
-    expected_state_action_values = (next_state_values * GAMMA) + reward_batch.expand((82,128,2)).reshape(128,164)
+    expected_state_action_values = (next_state_values * GAMMA) + reward_batch.expand((123,128,2)).reshape(128,246)
 
     # Compute Huber loss
     criterion = nn.SmoothL1Loss()
@@ -175,7 +176,7 @@ def optimize_model():
 if torch.cuda.is_available():
     num_episodes = 600
 else:
-    num_episodes = 200
+    num_episodes = 100
 
 for i_episode in range(num_episodes):
     # Initialize the environment and get it's state
@@ -213,7 +214,7 @@ for i_episode in range(num_episodes):
         if done:
             episode_durations.append(t + 1)
             episode_x.append(i_episode)
-            plot_durations()
+            #plot_durations()
             env.reset()
             break
         t += 1

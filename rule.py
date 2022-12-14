@@ -102,6 +102,12 @@ class Turn():
         else:
             attackPower += attackPower1+attackPower3#+attackPower2+attackPower4
             defencePower += defencePower1+defencePower3
+        if(one.type == "ger"):
+            attackPower *= GER_Attack
+            defencePower *= SOV_Attack
+        else:
+            defencePower *= GER_Attack
+            attackPower *= SOV_Attack
         print("airSuperiority={}".format(airSuperiority))
         if(attackPower > defencePower):
             two.trench -= trench_damage_factor * two.trench

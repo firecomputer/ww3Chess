@@ -50,7 +50,7 @@ class DQN(nn.Module):
         x = F.relu(self.layer2(x))
         return self.layer3(x)
 
-env = HOIEnv(0)
+env = HOIEnv(1)
 
 BATCH_SIZE = 128
 GAMMA = 0.99
