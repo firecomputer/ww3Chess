@@ -60,7 +60,7 @@ class Game:
         pygame.display.flip()
 
         #convert image so it can be displayed in OpenCV
-        view = pygame.surfarray.array3d(screen)
+        view = pygame.surfarray.array3d(self.screen)
 
         #  convert from (width, height, channel) to (height, width, channel)
         view = view.transpose([1, 0, 2])
