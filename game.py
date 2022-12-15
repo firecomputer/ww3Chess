@@ -6,7 +6,16 @@ from tile import *
 from board import *
 from dragger import *
 from rule import *
-import sys
+
+import cv2
+from google.colab.patches import cv2_imshow
+from google.colab import output
+import time 
+import os, sys
+
+# set SDL to use the dummy NULL video driver, 
+#   so it doesn't need a windowing system.
+os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 
 class Game:
