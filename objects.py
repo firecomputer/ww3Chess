@@ -99,13 +99,13 @@ class infantry(Army):
     def __init__(self,pos,type,number):
         self.link_ger = "src/infantry_ger.png"
         self.link_sov = "src/infantry_sov.png"
-        super().__init__("infantry",self.link_ger,self.link_sov,5,1,pos,type,1,0.6,1,number)
+        super().__init__("infantry",self.link_ger,self.link_sov,5,1,pos,type,1,1.3,1,number)
 
 class armored(Army):
     def __init__(self,pos,type,number):
         self.link_ger = "src/armored_ger.png" 
         self.link_sov = "src/armored_sov.png"
-        super().__init__("armored",self.link_ger,self.link_sov,10,1,pos,type,2,0.7,2,number)
+        super().__init__("armored",self.link_ger,self.link_sov,10,1,pos,type,2,2,2,number)
 
 class fighter(Army):
     def __init__(self,pos,type,number):
