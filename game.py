@@ -11,7 +11,7 @@ import sys
 
 class Game:
     def __init__(self):
-        pygame.init()
+        pygame.display.init()
         info = pygame.display.Info()
         screensize = info.current_w,info.current_h
         print(screensize)
