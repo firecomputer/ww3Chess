@@ -211,7 +211,7 @@ for i_episode in range(num_episodes):
         for key in policy_net_state_dict:
             target_net_state_dict[key] = policy_net_state_dict[key]*TAU + target_net_state_dict[key]*(1-TAU)
         target_net.load_state_dict(target_net_state_dict)
-        if done:
+        if(done or t<150):
             episode_durations.append(t + 1)
             episode_x.append(i_episode)
             #plot_durations()
